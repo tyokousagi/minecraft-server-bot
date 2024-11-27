@@ -48,5 +48,8 @@ public class PropertyUtil {
     public static String getStartBatPath() {
         return properties.getProperty("start_bat_path");
     }
+    public static String getBackupScriptPath() {
+        return properties.getProperty("backup_script_path");
+    }
 
 }

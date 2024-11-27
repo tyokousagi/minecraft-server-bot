@@ -11,4 +11,11 @@ public class MinecraftServerChecker {
             return false;
         }
     }
+    public static String isServerRunningString(String host,int port) {
+        try (Socket socket = new Socket(host, port)) {
+            return "起動しています";
+        } catch (IOException e) {
+            return "停止しています";
+        }
+    }
 }

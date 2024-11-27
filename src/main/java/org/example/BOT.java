@@ -11,6 +11,8 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
+import java.awt.*;
+
 
 public class BOT extends ListenerAdapter {
 
@@ -46,7 +48,8 @@ public class BOT extends ListenerAdapter {
                 .addOptions(new OptionData(OptionType.STRING, "action", "サーバーの操作を指定")
                         .addChoices(
                                 new Command.Choice("start", "start"),
-                                new Command.Choice("stop", "stop")
+                                new Command.Choice("stop", "stop"),
+                                new Command.Choice("backup","backup")
                         )
                         .setRequired(true))
                 .queue(
@@ -63,13 +66,14 @@ public class BOT extends ListenerAdapter {
             System.out.println("指定されたチャンネルが見つかりませんでした");
         }
     }
-    public static void sendEmbedMessageToChannel(String guildID,String channelID,String message) {
+    public static void sendEmbedMessageToChannel(String guildID, String channelID, String message, Color color) {
         TextChannel channel = jda.getGuildById(guildID).getTextChannelById(channelID);
 
         if(channel != null) {
             channel.sendMessageEmbeds(
                     new EmbedBuilder()
                             .setTitle(message)
+                            .setColor(color)
                             .build()
             ).queue();
         }

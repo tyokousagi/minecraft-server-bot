@@ -10,6 +10,8 @@ import java.awt.*;
 public class CommandHandler extends ListenerAdapter {
     private static final String channelID = PropertyUtil.getChannelId();
     private static final String guildID = PropertyUtil.getGuildId();
+    private static final String HOST = PropertyUtil.getRconHost();
+    private static final int PORT = Integer.parseInt(PropertyUtil.getRconPort());
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -23,12 +25,13 @@ public class CommandHandler extends ListenerAdapter {
             embed.setTitle("status");
             embed.addField("BOT",PropertyUtil.getBotVersion(),false);
             embed.addField("Minecraft",PropertyUtil.getMinecraftVersion(),false);
+            embed.addField("サーバーの状態",MinecraftServerChecker.isServerRunningString(HOST,PORT),false);
             embed.setColor(Color.GREEN);
             event.replyEmbeds(embed.build()).queue();
         }else if(event.getName().equalsIgnoreCase("help")) {
             EmbedBuilder embed = new EmbedBuilder();
             embed.setTitle("仕様書");
-            embed.addField("status","BOTとMinecraftのバージョンを表示します",false);
+            embed.addField("status","BOTとMinecraftのバージョンとサーバーの状態を表示します",false);
             embed.addField("server start","サーバーを起動します",false);
             embed.addField("server stop","サーバーを停止します",false);
             embed.setColor(Color.CYAN);
@@ -53,6 +56,12 @@ public class CommandHandler extends ListenerAdapter {
                 MinecraftRcon.build();
                 MinecraftRcon.sendCommand("stop");
                 BOT.serverActivity();
+            }else if(action.equalsIgnoreCase("backup")) {
+                EmbedBuilder embed = new EmbedBuilder();
+                embed.setTitle("バックアップ開始");
+                embed.setColor(Color.CYAN);
+                event.replyEmbeds(embed.build()).queue();
+                BatFileRunner.backupStart();
             }
         }
     }
