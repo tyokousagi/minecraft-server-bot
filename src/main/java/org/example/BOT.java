@@ -5,27 +5,17 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.commands.Command;
-import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import net.dv8tion.jda.api.interactions.commands.localization.LocalizationFunction;
-import net.dv8tion.jda.api.interactions.commands.localization.LocalizationMap;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
-import net.dv8tion.jda.api.utils.data.DataObject;
-
-import java.awt.*;
-import java.util.Arrays;
-import java.util.Map;
 
 
 public class BOT extends ListenerAdapter {
+
+    private static  final String HOST = "192.168.1.8";
+    private static final int PORT = 25565;
     private static JDA jda = null;
     public static void startBot() throws InterruptedException {
         System.setProperty("file.encoding", "UTF-8");
@@ -35,6 +25,7 @@ public class BOT extends ListenerAdapter {
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
                 .addEventListeners(new CommandHandler(),new BOT())
                 .setActivity(Activity.playing("v1.0"))
+                .setAutoReconnect(true)
                 .build();
         jda.awaitReady();
 
@@ -81,6 +72,14 @@ public class BOT extends ListenerAdapter {
                             .setTitle(message)
                             .build()
             ).queue();
+        }
+    }
+    public static void serverActivity() {
+        boolean isServerActive = MinecraftServerChecker.isServerRunning(HOST,PORT);
+        if(isServerActive) {
+            jda.getPresence().setActivity(Activity.customStatus("サーバー起動中"));
+        }else {
+            jda.getPresence().setActivity(Activity.customStatus("サーバー停止中"));
         }
     }
 }

@@ -45,4 +45,8 @@ public class PropertyUtil {
     public static String getRconHost() {
         return properties.getProperty("rcon_host");
     }
+    public static String getStartBatPath() {
+        return properties.getProperty("start_bat_path");
+    }
+
 }

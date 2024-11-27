@@ -2,13 +2,10 @@ package org.example;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.awt.*;
-import java.io.IOException;
 
 public class CommandHandler extends ListenerAdapter {
     private static final String channelID = PropertyUtil.getChannelId();
@@ -43,12 +40,18 @@ public class CommandHandler extends ListenerAdapter {
                 embed.setTitle("サーバー起動");
                 embed.setColor(Color.YELLOW);
                 event.replyEmbeds(embed.build()).queue();
+
+                BatFileRunner.serverStart();
+
+                BOT.serverActivity();
+
             }else if(action.equalsIgnoreCase("stop")) {
                 EmbedBuilder embed = new EmbedBuilder();
                 embed.setTitle("サーバー停止");
                 embed.setColor(Color.DARK_GRAY);
                 event.replyEmbeds(embed.build()).queue();
                 MinecraftRcon.sendCommand("stop");
+                BOT.serverActivity();
             }
         }
     }
