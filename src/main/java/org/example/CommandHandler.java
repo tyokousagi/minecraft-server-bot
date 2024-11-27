@@ -50,6 +50,7 @@ public class CommandHandler extends ListenerAdapter {
                 embed.setTitle("サーバー停止");
                 embed.setColor(Color.DARK_GRAY);
                 event.replyEmbeds(embed.build()).queue();
+                MinecraftRcon.build();
                 MinecraftRcon.sendCommand("stop");
                 BOT.serverActivity();
             }
