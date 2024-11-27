@@ -39,7 +39,7 @@ public class BOT extends ListenerAdapter {
         jda.awaitReady();
 
         registerCommands();
-        //jda.updateCommands().queue();
+        jda.updateCommands().queue();
     }
     private static void registerCommands() {
         jda.upsertCommand("status", "バージョンを表示").queue(

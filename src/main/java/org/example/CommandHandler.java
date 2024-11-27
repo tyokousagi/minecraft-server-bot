@@ -48,13 +48,7 @@ public class CommandHandler extends ListenerAdapter {
                 embed.setTitle("サーバー停止");
                 embed.setColor(Color.DARK_GRAY);
                 event.replyEmbeds(embed.build()).queue();
-                try {
-                    Rcon.sendCommand("stop");
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+                MinecraftRcon.sendCommand("stop");
             }
         }
     }
