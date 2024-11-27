@@ -22,6 +22,9 @@ public class BatFileRunner {
                     String line;
                     while ((line = reader.readLine()) != null) {
                         System.out.println("[サーバー]: " + line);
+                        if(line.contains("Done")) {
+                            BOT.sendEmbedMessageToChannel(guildID,channelID,"サーバーが起動しました", Color.GREEN);
+                        }
                     }
                 }
 
@@ -36,7 +39,10 @@ public class BatFileRunner {
     public static void backupStart() {
         CompletableFuture.runAsync(() -> {
             try {
-                ProcessBuilder builder = new ProcessBuilder("powershell.exe", "-NoProfile", "Bypass", "-File", backupScriptPath);
+                ProcessBuilder builder = new ProcessBuilder(
+                        "powershell.exe", "-NoProfile", "-ExecutionPolicy","Bypass", "-File", backupScriptPath,"-Encoding", "UTF8"
+                );
+                builder.environment().put("JAVA_TOOL_OPTIONS", "-Dfile.encoding=UTF-8");
                 builder.redirectErrorStream(true);
                 Process process = builder.start();
 
