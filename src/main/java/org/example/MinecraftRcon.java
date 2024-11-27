@@ -10,11 +10,11 @@ public class MinecraftRcon {
     public  static Rcon rcon = null;
     private static final String HOST = PropertyUtil.getRconHost();
     private static final int PORT = Integer.parseInt(PropertyUtil.getRconPort());
-    private static final byte PASSWORD = Byte.parseByte(PropertyUtil.getRconPassword());
+    private static final String PASSWORD = PropertyUtil.getRconPassword();
 
     public static void build() {
         try {
-            rcon = new Rcon(HOST,PORT, new byte[]{PASSWORD});
+            rcon = new Rcon(HOST,PORT, PASSWORD.getBytes());
         }catch (AuthenticationException e) {
             e.printStackTrace();
             System.out.println("Rconへのログインに失敗しました");

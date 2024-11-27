@@ -7,5 +7,6 @@ public class Main {
         System.setProperty("file.encoding", "UTF-8");
         System.out.println(Charset.defaultCharset().displayName());
         BOT.startBot();
+        MinecraftRcon.build();
     }
 }
