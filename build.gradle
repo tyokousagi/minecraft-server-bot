@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 group = 'org.example'
@@ -13,6 +14,12 @@ repositories {
     }
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
 jar {
     manifest {
         attributes(
@@ -23,6 +30,8 @@ jar {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE // 重複を除外する設定
+
+
 }
 
 
@@ -33,6 +42,10 @@ dependencies {
     implementation name: 'rkon-core-1.1.2'
     implementation 'org.slf4j:slf4j-api:2.0.7' // SLF4J API
     implementation 'org.slf4j:slf4j-simple:2.0.7' // SLF4Jシンプル実装
+}
+
+shadowJar {
+    archiveClassifier.set('')
 }
 
 test {

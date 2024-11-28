@@ -45,13 +45,18 @@ public class BOT extends ListenerAdapter {
         );
 
         jda.upsertCommand("server", "サーバーの操作")
-                .addOptions(new OptionData(OptionType.STRING, "action", "サーバーの操作を指定")
-                        .addChoices(
-                                new Command.Choice("start", "start"),
-                                new Command.Choice("stop", "stop"),
-                                new Command.Choice("backup","backup")
-                        )
-                        .setRequired(true))
+                .addOptions(
+                        new OptionData(OptionType.STRING, "action", "サーバーの操作を指定")
+                                .addChoices(
+                                        new Command.Choice("start", "start"),
+                                        new Command.Choice("stop", "stop"),
+                                        new Command.Choice("backup", "backup"),
+                                        new Command.Choice("execute", "execute")
+                                )
+                                .setRequired(true),
+                        new OptionData(OptionType.STRING, "command", "実行するコマンド")
+                                .setRequired(false) // "execute" 以外のときは不要
+                )
                 .queue(
                         success -> System.out.println("コマンドが登録されました: server"),
                         failure -> System.out.println("コマンドの登録に失敗しました: " + failure.getMessage())
