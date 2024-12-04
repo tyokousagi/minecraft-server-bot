@@ -49,11 +49,17 @@ public class BatFileRunner {
                 //実行結果を読み取る
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 String line;
+                boolean ok = false;
                 while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
+                    if(!ok) {
+                        System.out.println(line);
+                    }
+                    if(line.contains("正常に完了")) {
+                        BOT.sendEmbedMessageToChannel(guildID,channelID,"バックアップのコピーが完了しました",Color.GREEN);
+                    }
                     if(line.contains("バックアップファイルを圧縮しています")) {
                         BOT.sendEmbedMessageToChannel(guildID,channelID,"バックアップが完了しました", Color.GREEN);
-                        break;
+                        ok = true;
                     }
                 }
                 int exitCode = process.waitFor();

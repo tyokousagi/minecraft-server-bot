@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import java.awt.*;
+import java.util.Objects;
 
 
 public class BOT extends ListenerAdapter {
@@ -61,9 +62,10 @@ public class BOT extends ListenerAdapter {
                         success -> System.out.println("コマンドが登録されました: server"),
                         failure -> System.out.println("コマンドの登録に失敗しました: " + failure.getMessage())
                 );
+        
     }
     public static void sendMessageToChannel(String guildID,String channelID,String message) {
-        TextChannel channel = jda.getGuildById(guildID).getTextChannelById(channelID);
+        TextChannel channel = Objects.requireNonNull(jda.getGuildById(guildID)).getTextChannelById(channelID);
 
         if(channel != null) {
             channel.sendMessage(message).queue();
@@ -72,7 +74,7 @@ public class BOT extends ListenerAdapter {
         }
     }
     public static void sendEmbedMessageToChannel(String guildID, String channelID, String message, Color color) {
-        TextChannel channel = jda.getGuildById(guildID).getTextChannelById(channelID);
+        TextChannel channel = Objects.requireNonNull(jda.getGuildById(guildID)).getTextChannelById(channelID);
 
         if(channel != null) {
             channel.sendMessageEmbeds(
