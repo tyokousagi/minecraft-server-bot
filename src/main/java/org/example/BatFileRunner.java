@@ -51,6 +51,9 @@ public class BatFileRunner {
                 String line;
                 boolean ok = false;
                 while ((line = reader.readLine()) != null) {
+                    if(line.contains("終了コード:1")) {
+                        BOT.sendEmbedMessageToChannel(guildID,channelID,"バックアップが失敗しました",Color.RED);
+                    }
                     if(!ok) {
                         System.out.println(line);
                     }
