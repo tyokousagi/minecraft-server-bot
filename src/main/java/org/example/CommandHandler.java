@@ -1,11 +1,20 @@
 package org.example;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.text.TextInput;
+import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
+import net.dv8tion.jda.api.interactions.modals.Modal;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.Objects;
 
 public class CommandHandler extends ListenerAdapter {
     private static final String channelID = PropertyUtil.getChannelId();
@@ -14,7 +23,7 @@ public class CommandHandler extends ListenerAdapter {
     private static final int PORT = Integer.parseInt(PropertyUtil.getRconPort());
 
     @Override
-    public void onMessageReceived(MessageReceivedEvent event) {
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
 
     }
 
@@ -38,8 +47,8 @@ public class CommandHandler extends ListenerAdapter {
             embed.setColor(Color.CYAN);
             event.replyEmbeds(embed.build()).queue();
         }else if(event.getName().equalsIgnoreCase("server")) {
-            String action = event.getOption("action").getAsString();
-            String command = event.getOption("command") != null ? event.getOption("command").getAsString() : null;
+            String action = Objects.requireNonNull(event.getOption("action")).getAsString();
+            String command = event.getOption("command") != null ? Objects.requireNonNull(event.getOption("command")).getAsString() : null;
             if(action.equalsIgnoreCase("start")) {
                 EmbedBuilder embed = new EmbedBuilder();
                 if(MinecraftServerChecker.isServerRunning(HOST,PORT)) {
@@ -90,6 +99,48 @@ public class CommandHandler extends ListenerAdapter {
                     event.replyEmbeds(embed.build()).queue();
                 }
             }
+        }else if(event.getName().equalsIgnoreCase("whitelist")) {
+            String action = Objects.requireNonNull(event.getOption("action")).getAsString();
+            if(action.equalsIgnoreCase("add")) {
+                EmbedBuilder embed = new EmbedBuilder();
+                embed.setTitle("ホワイトリストに追加する名前を入力してください");
+                embed.setColor(Color.GREEN);
+                event.replyEmbeds(embed.build())
+                        .setActionRow(Button.primary("input","文字を入力"))
+                        .queue();
+            }
         }
     }
+
+    @Override
+    public void onButtonInteraction(ButtonInteractionEvent event) {
+        if (event.getComponentId().equalsIgnoreCase("input")) {
+            // モーダルを作成
+            Modal modal = Modal.create("input", "文字列を入力")
+                    .addComponents(
+                            ActionRow.of(
+                                    TextInput.create("input_text", "入力欄", TextInputStyle.SHORT)
+                                            .setPlaceholder("ここに文字を入力してください")
+                                            .setRequired(true) // 必須入力
+                                            .setMinLength(1) // 最小文字数
+                                            .setMaxLength(100) // 最大文字数
+                                            .build()
+                            )
+                    )
+                    .build();
+
+            // モーダルをユーザーに送信
+            event.replyModal(modal).queue();
+        }
+    }
+    @Override
+    public void onModalInteraction(ModalInteractionEvent event) {
+        if (event.getModalId().equals("input")) {
+            String input = Objects.requireNonNull(event.getValue("input_text")).getAsString();
+            // 入力された文字列を処理
+            event.reply("あなたが入力した文字列: `" + input + "`").queue();
+        }
+    }
+
+
 }

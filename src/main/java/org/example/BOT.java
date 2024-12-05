@@ -62,6 +62,19 @@ public class BOT extends ListenerAdapter {
                         success -> System.out.println("コマンドが登録されました: server"),
                         failure -> System.out.println("コマンドの登録に失敗しました: " + failure.getMessage())
                 );
+        jda.upsertCommand("whitelist","ホワイトリストの管理")
+                .addOptions(
+                        new OptionData(OptionType.STRING,"action","ホワイトリストの操作を指定")
+                                .addChoices(
+                                        new Command.Choice("add","add"),
+                                        new Command.Choice("remove","remove")
+                                )
+                                .setRequired(true)
+                )
+                .queue(
+                        success -> System.out.println("コマンドが登録されました: whitelist"),
+                        failure -> System.out.println("コマンドが登録に失敗しました: " + failure.getMessage())
+                );
         
     }
     public static void sendMessageToChannel(String guildID,String channelID,String message) {
