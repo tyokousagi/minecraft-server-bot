@@ -1,16 +1,9 @@
 package org.example;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import net.dv8tion.jda.api.interactions.components.text.TextInput;
-import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
-import net.dv8tion.jda.api.interactions.modals.Modal;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -101,46 +94,22 @@ public class CommandHandler extends ListenerAdapter {
             }
         }else if(event.getName().equalsIgnoreCase("whitelist")) {
             String action = Objects.requireNonNull(event.getOption("action")).getAsString();
-            if(action.equalsIgnoreCase("add")) {
-                EmbedBuilder embed = new EmbedBuilder();
-                embed.setTitle("ホワイトリストに追加する名前を入力してください");
-                embed.setColor(Color.GREEN);
-                event.replyEmbeds(embed.build())
-                        .setActionRow(Button.primary("input","文字を入力"))
-                        .queue();
+            String username = event.getOption("username") != null ? Objects.requireNonNull(event.getOption("username")).getAsString() : null;
+            EmbedBuilder embed = new EmbedBuilder();
+            if(MinecraftServerChecker.isServerRunning(HOST,PORT)) {
+                if(action.equalsIgnoreCase("add")) {
+                    MinecraftRcon.sendCommand("whitelist add " + username);
+                    embed.setColor(Color.GREEN);
+                    embed.setTitle("Whitelist");
+                    embed.addField("Minecraft Username",username,false);
+                    embed.setImage("https://mc-heads.net/player/" + username);
+                }else if(action.equalsIgnoreCase("delete")) {
+                    MinecraftRcon.sendCommand("whitelist delete" + username);
+                }
+            }else {
+                embed.setColor(Color.RED);
+                embed.setTitle("サーバーを起動してから実行してください");
             }
         }
     }
-
-    @Override
-    public void onButtonInteraction(ButtonInteractionEvent event) {
-        if (event.getComponentId().equalsIgnoreCase("input")) {
-            // モーダルを作成
-            Modal modal = Modal.create("input", "文字列を入力")
-                    .addComponents(
-                            ActionRow.of(
-                                    TextInput.create("input_text", "入力欄", TextInputStyle.SHORT)
-                                            .setPlaceholder("ここに文字を入力してください")
-                                            .setRequired(true) // 必須入力
-                                            .setMinLength(1) // 最小文字数
-                                            .setMaxLength(100) // 最大文字数
-                                            .build()
-                            )
-                    )
-                    .build();
-
-            // モーダルをユーザーに送信
-            event.replyModal(modal).queue();
-        }
-    }
-    @Override
-    public void onModalInteraction(ModalInteractionEvent event) {
-        if (event.getModalId().equals("input")) {
-            String input = Objects.requireNonNull(event.getValue("input_text")).getAsString();
-            // 入力された文字列を処理
-            event.reply("あなたが入力した文字列: `" + input + "`").queue();
-        }
-    }
-
-
 }

@@ -64,11 +64,14 @@ public class BOT extends ListenerAdapter {
                 );
         jda.upsertCommand("whitelist","ホワイトリストの管理")
                 .addOptions(
-                        new OptionData(OptionType.STRING,"action","ホワイトリストの操作を指定")
+                        new OptionData(OptionType.STRING,"action","ホワイトリストの管理")
                                 .addChoices(
                                         new Command.Choice("add","add"),
-                                        new Command.Choice("remove","remove")
+                                        new Command.Choice("delete","delete"),
+                                        new Command.Choice("info","info")
                                 )
+                                .setRequired(true),
+                        new OptionData(OptionType.STRING, "username","編集するユーザネーム")
                                 .setRequired(true)
                 )
                 .queue(
