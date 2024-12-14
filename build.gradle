@@ -42,6 +42,7 @@ dependencies {
     implementation name: 'rkon-core-1.1.2'
     implementation 'org.slf4j:slf4j-api:2.0.7' // SLF4J API
     implementation 'org.slf4j:slf4j-simple:2.0.7' // SLF4Jシンプル実装
+    implementation 'org.json:json:20240303'
     implementation 'org.jsoup:jsoup:1.16.1'
 }
 

@@ -102,13 +102,20 @@ public class CommandHandler extends ListenerAdapter {
                     embed.setColor(Color.GREEN);
                     embed.setTitle("Whitelist");
                     embed.addField("Minecraft Username",username,false);
-                    embed.setImage("https://mc-heads.net/player/" + username);
+                    try {
+                        embed.addField("Minecraft UUID",MojangApi.getUUID(username),false);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    embed.setImage("https://mc-heads.net/head/" + username);
+                    event.replyEmbeds(embed.build()).queue();
                 }else if(action.equalsIgnoreCase("delete")) {
                     MinecraftRcon.sendCommand("whitelist delete" + username);
                 }
             }else {
                 embed.setColor(Color.RED);
                 embed.setTitle("サーバーを起動してから実行してください");
+                event.replyEmbeds(embed.build()).queue();
             }
         }
     }
