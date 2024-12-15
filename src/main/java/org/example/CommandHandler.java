@@ -98,9 +98,10 @@ public class CommandHandler extends ListenerAdapter {
             EmbedBuilder embed = new EmbedBuilder();
             if(MinecraftServerChecker.isServerRunning(HOST,PORT)) {
                 if(action.equalsIgnoreCase("add")) {
-                    MinecraftRcon.sendCommand("whitelist add " + username);
+                    System.out.println("[サーバー]: " + MinecraftRcon.sendCommand("whitelist add " + username));
                     embed.setColor(Color.GREEN);
                     embed.setTitle("Whitelist");
+                    embed.setDescription(username + "がホワイトリストに追加されました");
                     embed.addField("Minecraft Username",username,false);
                     try {
                         embed.addField("Minecraft UUID",MojangApi.getUUID(username),false);
@@ -110,7 +111,18 @@ public class CommandHandler extends ListenerAdapter {
                     embed.setImage("https://mc-heads.net/head/" + username);
                     event.replyEmbeds(embed.build()).queue();
                 }else if(action.equalsIgnoreCase("delete")) {
-                    MinecraftRcon.sendCommand("whitelist delete" + username);
+                    System.out.println("[サーバー]: " + MinecraftRcon.sendCommand("whitelist delete " + username));
+                    embed.setColor(Color.RED);
+                    embed.setTitle("Whitelist");
+                    embed.setDescription(username + "がホワイトリストから削除されました");
+                    embed.addField("Minecraft Username",username,false);
+                    try {
+                        embed.addField("Minecraft UUID",MojangApi.getUUID(username),false);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    embed.setImage("https://mc-heads.net/head/" + username);
+                    event.replyEmbeds(embed.build()).queue();
                 }
             }else {
                 embed.setColor(Color.RED);
